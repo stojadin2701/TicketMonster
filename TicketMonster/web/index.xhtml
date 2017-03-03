@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+    <div class="container-fluid">
+        <div class="row">           
+
+            <ui:composition template="/templates/default/main_index.xhtml">
+                <ui:define name="content">
+                    <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isUser() and loginBean.hasMessages()}">
+                        <p:messages for="userNotifications" id="userNotifications" showDetail="true" autoUpdate="true" closable="true"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                        <p:messages for="adminNotifications" id="adminNotifications" showDetail="true" autoUpdate="true" closable="true"/>
+                    </ui:fragment>
+                    <ui:fragment id="search_results_fragment" rendered="#{eventsBean.searchHappened}">
+                        <fieldset style="margin-top:30px">
+                            <legend>Search Results</legend>
+                            <h:form id="found_events_form">
+                                <h:panelGroup id="found_events_table">
+                                    <p:dataTable class="found_events_t" var="event" value="#{eventsBean.foundEvents}" rows="10">
+                                        <p:messages id="messagesFoundEvents" showDetail="true" autoUpdate="true" closable="true" />
+                                        <p:column headerText="Name" rendered="#{!loginBean.loggedIn}">
+                                            <h:outputText value="#{event.eventName}" />
+                                        </p:column>
+
+                                        <p:column headerText="Name" rendered="#{loginBean.loggedIn}">
+                                            <h:commandLink action="#{eventsBean.showDetails(event)}">
+                                                <h:outputText value="#{event.eventName}" />
+                                            </h:commandLink>
+                                        </p:column>
+
+                                        <p:column headerText="Venue">
+                                            <h:outputText value="#{event.eventPlace}" />
+                                        </p:column>
+
+                                        <p:column headerText="Start Date">
+                                            <h:outputText value="#{event.startDate}" />
+                                        </p:column>
+
+                                        <p:column headerText="End Date">
+                                            <h:outputText value="#{event.endDate}" />
+                                        </p:column>
+
+                                        <p:column headerText="One Day Ticket">
+                                            <h:outputText value="#{event.oneDayTicketPrice}" />
+                                        </p:column>
+
+                                        <p:column headerText="Full Ticket">
+                                            <h:outputText value="#{event.allDaysTicketPrice}" />
+                                        </p:column>
+
+                                        <p:column headerText="Actions" rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                            <center>
+                                                <h:form>
+                                                    <p:commandButton title="Edit Event" icon="ui-icon-pencil" action="#{eventsBean.editEvent(event)}" />
+                                                    <p:commandButton title="Cancel Event" icon="ui-icon-trash" action="#{eventsBean.cancelEvent(event)}" update="@(.found_events_t)"/>
+                                                </h:form>
+                                            </center>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGroup>
+                            </h:form>
+                        </fieldset>
+                        <span style="margin-top:30px"></span>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{!loginBean.loggedIn}">                    
+                        <fieldset>
+                            <legend>Top Rated Festivals</legend>
+                            <p:dataTable id="top_rated_events" var="event" value="#{eventsBean.topRated}">
+                                <p:column headerText="Name" rendered="#{!loginBean.loggedIn}">
+                                    <h:outputText value="#{event.eventName}" />
+                                </p:column>
+
+                                <p:column headerText="Venue">
+                                    <h:outputText value="#{event.eventPlace}" />
+                                </p:column>
+
+                                <p:column headerText="Start Date">
+                                    <h:outputText value="#{event.startDate}" />
+                                </p:column>
+
+                                <p:column headerText="End Date">
+                                    <h:outputText value="#{event.endDate}" />
+                                </p:column>
+
+                                <p:column headerText="One Day Ticket">
+                                    <h:outputText value="#{event.oneDayTicketPrice}" />
+                                </p:column>
+
+                                <p:column headerText="Full Ticket">
+                                    <h:outputText value="#{event.allDaysTicketPrice}" />
+                                </p:column>
+
+                                <p:column headerText="Rating">
+                                    <h:outputText value="#{event.rating}" />
+                                </p:column>                                
+                            </p:dataTable>
+                        </fieldset>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isUser()}">                    
+                        <fieldset>
+                            <legend>Ongoing and Upcoming Festivals</legend>
+                            <p:dataTable id="upcoming_events" var="event" value="#{eventsBean.ongoingUpcoming}">
+
+                                <p:column headerText="Name">
+                                    <h:form>
+                                        <h:commandLink action="#{eventsBean.showDetails(event)}">
+                                            <h:outputText value="#{event.eventName}" />
+                                        </h:commandLink>
+                                    </h:form>
+                                </p:column>
+
+                                <p:column headerText="Venue">
+                                    <h:outputText value="#{event.eventPlace}" />
+                                </p:column>
+
+                                <p:column headerText="Start Date">
+                                    <h:outputText value="#{event.startDate}" />
+                                </p:column>
+
+                                <p:column headerText="End Date">
+                                    <h:outputText value="#{event.endDate}" />
+                                </p:column>
+
+                                <p:column headerText="One Day Ticket">
+                                    <h:outputText value="#{event.oneDayTicketPrice}" />
+                                </p:column>
+
+                                <p:column headerText="Full Ticket">
+                                    <h:outputText value="#{event.allDaysTicketPrice}" />
+                                </p:column>               
+                            </p:dataTable>
+                        </fieldset>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">                    
+                        <fieldset>
+                            <legend>Most Viewed Festivals</legend>
+                            <h:form id="viewed_form">
+                                <h:panelGroup id="most_viewed_table">
+                                    <p:dataTable id="most_viewed_events" class ="events_mv" var="event" value="#{eventsBean.mostViewed}">
+
+                                        <p:column headerText="Name">
+                                            <h:commandLink action="#{eventsBean.showDetails(event)}">
+                                                <h:outputText value="#{event.eventName}" />
+                                            </h:commandLink>
+                                        </p:column>
+
+                                        <p:column headerText="Venue">
+                                            <h:outputText value="#{event.eventPlace}" />
+                                        </p:column>
+
+                                        <p:column headerText="Start Date">
+                                            <h:outputText value="#{event.startDate}" />
+                                        </p:column>
+
+                                        <p:column headerText="End Date">
+                                            <h:outputText value="#{event.endDate}" />
+                                        </p:column>
+
+                                        <p:column headerText="One Day Ticket">
+                                            <h:outputText value="#{event.oneDayTicketPrice}" />
+                                        </p:column>
+
+                                        <p:column headerText="Full Ticket">
+                                            <h:outputText value="#{event.allDaysTicketPrice}" />
+                                        </p:column>
+
+                                        <p:column headerText="Views">
+                                            <h:outputText value="#{event.viewCount}" />
+                                        </p:column> 
+
+                                        <p:column headerText="Actions">
+                                            <center>
+                                                <h:form>
+                                                    <p:commandButton class="table_button_l" title="Edit Event" icon="ui-icon-pencil" action="#{eventsBean.editEvent(event)}" process="@this" update="@(.events_t) @(.events_viewed) @(.events_visited)"/>
+                                                    <p:commandButton class="table_button_r" title="Cancel Event" icon="ui-icon-trash" action="#{eventsBean.cancelEvent(event)}" process="@this" update="@(.events_t) @(.events_viewed) @(.events_visited)"/>
+                                                </h:form>
+                                            </center>
+                                        </p:column>                                
+                                    </p:dataTable>
+                                </h:panelGroup>
+                            </h:form>
+                        </fieldset>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">                    
+                        <fieldset style="margin-top:30px" >
+                            <legend>Most Visited Festivals</legend>
+                            <h:form id="visited_form">
+                                <h:panelGroup id="most_visited_table">
+                                    <p:dataTable id="most_visited_events" class="events_visited" var="event" value="#{eventsBean.mostVisited}">
+
+                                        <p:column headerText="Name">
+                                            <h:commandLink action="#{eventsBean.showDetails(event)}">
+                                                <h:outputText value="#{event.eventName}" />
+                                            </h:commandLink>
+                                        </p:column>
+
+                                        <p:column headerText="Name">
+                                            <h:form>
+                                                <h:commandLink action="#{eventsBean.showDetails(event)}">
+                                                    <h:outputText value="#{event.eventName}" />
+                                                </h:commandLink>
+                                            </h:form>
+                                        </p:column>
+
+                                        <p:column headerText="Venue">
+                                            <h:outputText value="#{event.eventPlace}" />
+                                        </p:column>
+
+                                        <p:column headerText="Start Date">
+                                            <h:outputText value="#{event.startDate}" />
+                                        </p:column>
+
+                                        <p:column headerText="End Date">
+                                            <h:outputText value="#{event.endDate}" />
+                                        </p:column>
+
+                                        <p:column headerText="One Day Ticket">
+                                            <h:outputText value="#{event.oneDayTicketPrice}" />
+                                        </p:column>
+
+                                        <p:column headerText="Full Ticket">
+                                            <h:outputText value="#{event.allDaysTicketPrice}" />
+                                        </p:column>
+
+                                        <p:column headerText="Ticket Sales">
+                                            <h:outputText value="#{event.sellCount}" />
+                                        </p:column> 
+
+                                        <p:column headerText="Actions">
+                                            <center>
+                                                <h:form>
+                                                    <p:commandButton class="table_button_l" title="Edit Event" icon="ui-icon-pencil" action="#{eventsBean.editEvent(event)}" process="@this" update="@(.events_t) @(.events_viewed) @(.events_visited)"/>
+                                                    <p:commandButton class="table_button_r" title="Cancel Event" icon="ui-icon-trash" action="#{eventsBean.cancelEvent(event)}" process="@this" update="@(.events_t) @(.events_viewed) @(.events_visited)"/>
+                                                </h:form>
+                                            </center>
+                                        </p:column>                                
+                                    </p:dataTable>
+                                </h:panelGroup>
+                            </h:form>
+                        </fieldset>
+                    </ui:fragment>
+
+                    <fieldset style="margin-top:30px">
+                        <legend>All Festivals</legend>
+                        <h:form id="events_form"> 
+                            <h:panelGroup id="all_table">
+                                <p:dataTable id="events_table" class="events_t" var="event" value="#{eventsBean.events}" rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="5,10,15">
+                                    <p:messages id="messagesEvents" showDetail="true" autoUpdate="true" closable="true" />
+
+                                    <p:column headerText="Name" rendered="#{!loginBean.loggedIn}">
+                                        <h:outputText value="#{event.eventName}" />
+                                    </p:column>
+
+                                    <p:column headerText="Name" rendered="#{loginBean.loggedIn}">
+                                        <h:commandLink action="#{eventsBean.showDetails(event)}">
+                                            <h:outputText value="#{event.eventName}" />
+                                        </h:commandLink>
+                                    </p:column>
+
+                                    <p:column headerText="Venue">
+                                        <h:outputText value="#{event.eventPlace}" />
+                                    </p:column>
+
+                                    <p:column headerText="Start Date">
+                                        <h:outputText value="#{event.startDate}" />
+                                    </p:column>
+
+                                    <p:column headerText="End Date">
+                                        <h:outputText value="#{event.endDate}" />
+                                    </p:column>
+
+                                    <p:column headerText="One Day Ticket">
+                                        <h:outputText value="#{event.oneDayTicketPrice}" />
+                                    </p:column>
+
+                                    <p:column headerText="Full Ticket">
+                                        <h:outputText value="#{event.allDaysTicketPrice}" />
+                                    </p:column>
+
+                                    <p:column headerText="Actions" rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                        <center>
+                                            <h:form>
+                                                <p:commandButton class="table_button_l" title="Edit Event" icon="ui-icon-pencil" action="#{eventsBean.editEvent(event)}" process="@this" update=":events_form:all_table :visited_form:most_visited_table :viewed_form:most_viewed_table"/>
+                                                <p:commandButton class="table_button_r" title="Cancel Event" icon="ui-icon-trash" action="#{eventsBean.cancelEvent(event)}" process="@this" update="events_form:all_table :visited_form:most_visited_table :viewed_form:most_viewed_table"/>
+                                            </h:form>
+                                        </center>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </h:form>
+                    </fieldset>
+                </ui:define>
+            </ui:composition>
+        </div>
+    </div>
+
+
+</html>

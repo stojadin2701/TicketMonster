@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                <h:form id="manual_form" class="well form-horizontal" enctype="multipart/form-data">
+                    <fieldset>
+                        <legend>Add Festival</legend>
+                        <p:wizard flowListener="#{addFestivalBean.onFlowProcess}">
+                            <p:tab id="event_info" title="Festival Details">
+                                <!-- header="Enter general details about the festival" -->
+
+                                <h:outputText />
+                                <p:messages id="messagesEvent" autoUpdate="true" closable="true" showDetail="true"/>
+
+                                <div style="margin-top:30px" class="form-group">
+                                    <label class="col-md-4 control-label">Name*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-music"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ev.eventName}" required="true" label="Name" requiredMessage="You need to enter the name of the event"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Venue*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-globe"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ev.eventPlace}" required="true" label="Venue" requiredMessage="You need to enter the venue"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1"></div>
+                                <div class="form-group col-md-4">
+                                    <label class="col-md-4 control-label">Start Date*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <p:calendar mode="inline" id="fromEv" value="#{addFestivalBean.ev.startDate}" pattern="yyyy-MM-dd" required="true" 
+                                                        label="Start date" mindate="#{addFestivalBean.currentDate}" requiredMessage="You need to enter the start date of the event">
+                                                <p:ajax event="dateSelect" update="toEv" global="false"/>
+                                            </p:calendar>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-1"></div>
+                                <div class="form-group col-md-3">
+                                    <label class="col-md-4 control-label">End Date*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <p:calendar mode="inline" id= "toEv" value="#{addFestivalBean.ev.endDate}" pattern="yyyy-MM-dd" required="true" 
+                                                        label="End date" mindate="#{addFestivalBean.ev.startDate}" requiredMessage="You need to enter the end date of the event"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Ticket price per day (€)*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-euro"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ev.oneDayTicketPrice}" required="true" label="Ticket price per day" requiredMessage="You need to enter the ticket price per day"/> 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Ticket price for the entire event (€)*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-euro"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ev.allDaysTicketPrice}" required="true" label="Ticket price for the entire event" requiredMessage="You need to enter the ticket price for the entire event"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Maximum ticket reservations per person*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ev.maxReservationsPerUser}" required="true" label="Maximum ticket reservations per person" requiredMessage="You need to enter maximum tickets per person"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Number of tickets available per day*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ev.maxTicketsAvailablePerDay}" required="true" label="Number of tickets per day" requiredMessage="You need to enter maximum tickets available per day for the event"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </p:tab>
+
+                            <p:tab id="perf_details" title="Performer Details">
+                                <!-- header="Enter details about performers at the event" -->
+                                <h:outputText />
+                                <p:messages id="messagesPerformer" showDetail="true" autoUpdate="true" closable="true" />
+
+                                <div style="margin-top:30px" class="form-group">
+                                    <label class="col-md-4 control-label">Performer*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.per.performerName}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2"></div>
+                                <div class="form-group col-md-4">
+                                    <label class="col-md-4 control-label">Start Time*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <p:calendar id="fromPerf" value="#{addFestivalBean.per.startTime}" pattern="yyyy-MM-dd HH:mm" 
+                                                        mindate="#{addFestivalBean.ev.startDate}" maxdate="#{addFestivalBean.ev.endDate}">
+                                                <p:ajax event="dateSelect" update="toPerf" global="false"/>
+                                            </p:calendar>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                    <label class="col-md-4 control-label">End Time*</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <p:calendar id="toPerf" value="#{addFestivalBean.per.endTime}" pattern="yyyy-MM-dd HH:mm" 
+                                                        mindate="#{addFestivalBean.per.startTime}" maxdate="#{addFestivalBean.ev.endDate}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label"></label>
+                                    <div class="col-md-4">
+                                        <p:commandButton class="btn btn-lg btn-primary btn-block"  value="Add Performer" action="#{addFestivalBean.addPerformer}" update="perf_list"/>
+                                    </div>
+                                </div>
+                                <center>
+                                    <h:panelGroup id="perf_list" class="p_list">
+                                        <p:dataTable value="#{addFestivalBean.plist}" var="performer">
+                                            <p:column headerText="Performer">
+                                                <h:outputText value="#{performer.performerName}" />
+                                            </p:column>
+                                            <p:column headerText="End Time">
+                                                <h:outputText value="#{performer.startTime}" >
+                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Start Time">
+                                                <h:outputText value="#{performer.endTime}" >
+                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Action">
+                                                <center>
+                                                    <p:commandButton class="btn btn-sm btn-primary"  value="Remove Performer" action="#{addFestivalBean.removePerformer(performer)}" update="@(.p_list)" />                                                    
+                                                </center>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </center>
+                            </p:tab>
+
+                            <p:tab id="social_links" title="Social Links">
+                                <!-- header="Add links about the event on various platforms" -->
+
+                                <div  style="margin-top:30px" class="form-group">
+                                    <label class="col-md-4 control-label">Facebook Link</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.fbLink}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Twitter Link</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.twLink}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Instagram Link</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.instaLink}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Youtube Link</label>
+                                    <div class="col-md-4 inputGroupContainer">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-star"></i></span>
+                                            <p:inputText class="form-control" value="#{addFestivalBean.ytLink}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </p:tab>
+
+                            <p:tab id="media" title="Media">
+                                <p:panel header="Add Images">
+                                    <h:panelGrid columns="1">
+                                        <p:fileUpload fileUploadListener="#{addFestivalBean.addImage}" mode="advanced" dragDropSupport="true"
+                                                      update="@(.i_list)" sizeLimit="10000000" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/" />
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="Add Videos">
+                                    <h:panelGrid columns="1">
+                                        <p:fileUpload fileUploadListener="#{addFestivalBean.addVideo}" mode="advanced" dragDropSupport="true"
+                                                      update="@(.v_list)" sizeLimit="1000000000" allowTypes="/(\.|\/)(avi|flv|wmv|mov|mp4|mkv|webm|ogg)$/" />
+
+                                    </h:panelGrid>
+                                </p:panel>
+                                <hr/>
+                                <fieldset>
+                                    <legend>Images</legend>
+                                    <h:form id="img_form">
+                                        <p:messages id="imagesUpload" for="imageApproval" showDetail="true" autoUpdate="true" closable="true" />
+                                        <p:dataTable class="i_list" value="#{addFestivalBean.ilist}" var="image">
+                                            <p:column headerText="Image" >
+                                                <center>
+                                                    <p:graphicImage style="width:400px; height:225px" title="Event images" value="#{imageFetcherBean.image}">
+                                                        <f:param name="filename" value="#{image.imageUrl}"/>
+                                                    </p:graphicImage>
+                                                </center>
+                                            </p:column>
+                                            <p:column headerText="Action">
+                                                <center>
+                                                    <p:commandButton class="btn btn-sm btn-primary"  value="Remove Image" action="#{addFestivalBean.removeImage(image)}" process="@this" update="@(.i_list)"/>
+                                                </center>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </fieldset>
+                                <hr/>
+                                <fieldset>
+                                    <legend>Videos</legend>
+                                    <h:form id="vid_form">
+                                        <p:messages id="imagesUpload" for="videoApproval" showDetail="true" autoUpdate="true" closable="true" />
+                                        <p:dataTable class="v_list" value="#{addFestivalBean.vlist}" var="video">
+                                            <p:column headerText="Video" >
+                                                <center>
+                                                    <p:media value="#{video.videoUrl}" player="real" height="400" width="300">
+                                                        <f:param name="autoplay" value="0"/>
+                                                    </p:media>
+                                                </center>
+                                            </p:column>
+                                            <p:column headerText="Action">
+                                                <center>
+                                                    <p:commandButton class="btn btn-sm btn-primary"  value="Remove Video" action="#{addFestivalBean.removeVideo(video)}" process="@this" update="@(.v_list)"/>
+                                                </center>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </fieldset>
+                            </p:tab>
+
+                            <p:tab id="review" title="Preview">
+
+                                <h:outputText />                          
+                                <header align="center" class="page-header">
+                                    <center>
+                                        <h1 class="page-title">#{addFestivalBean.ev.eventName}</h1>
+                                        <div class="row">
+                                            <div class="col-md-10 col-lg-offset-1">
+                                                <div class="panel panel-default">
+                                                    <div class="bs-callout bs-callout-danger">
+                                                        <h4>Where?</h4>
+                                                        <p>
+                                                            #{addFestivalBean.ev.eventPlace}
+                                                        </p>
+                                                        <hr/>
+                                                        <h4>When?</h4>
+                                                        <p>
+                                                            #{addFestivalBean.ev.startDate} - #{addFestivalBean.ev.endDate}
+                                                        </p>
+                                                        <hr/>
+                                                        <h4>How much?</h4>
+                                                        <p>
+                                                            One day: #{addFestivalBean.ev.oneDayTicketPrice}€
+                                                            All days: #{addFestivalBean.ev.allDaysTicketPrice}€
+                                                        </p>
+                                                        <hr/>                                
+                                                        <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                                            <h4>Admin Details</h4>
+                                                            <p>
+                                                                Maximum reservations per user: #{addFestivalBean.ev.maxReservationsPerUser}
+                                                                Available tickets per day: #{addFestivalBean.ev.maxTicketsAvailablePerDay}
+                                                            </p>
+                                                            <hr/>
+                                                        </ui:fragment>
+                                                        <h4>Lineup</h4>
+                                                        <ui:repeat value="#{addFestivalBean.plist}" var="performer">
+                                                            <p>
+                                                                #{performer.performerName}:
+                                                                <h:outputText value="#{performer.startTime}" >
+                                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                                </h:outputText>
+                                                                -
+                                                                <h:outputText value="#{performer.endTime}" >
+                                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                                </h:outputText>
+                                                            </p>
+                                                        </ui:repeat>
+                                                        <hr/>
+                                                        <h4>Social Networks</h4>                                                    
+                                                        <ui:repeat value="#{addFestivalBean.llist}" var="slink">
+                                                            <p>
+                                                                <h:outputLink value="#{slink.url}">#{slink.networkName}</h:outputLink>                                                                                        
+                                                            </p>
+                                                        </ui:repeat>
+                                                        <hr/>
+                                                        <h4>Images</h4>
+                                                        <p:contentFlow value="#{addFestivalBean.ilist}" var="image" style="height:600px;">
+                                                            <p:graphicImage value="#{imageFetcherBean.image}"  styleClass="content">
+                                                                <f:param name="filename" value="#{image.imageUrl}"/>
+                                                            </p:graphicImage>
+                                                        </p:contentFlow>                                   
+                                                        <hr/>                                    
+                                                        <h4>Videos</h4>
+                                                        <ui:repeat value="#{addFestivalBean.vlist}"  var="video">
+                                                            <p:media value="#{video.videoUrl}" player="real" height="400" width="300">
+                                                                <f:param name="autoplay" value="0"/>
+                                                            </p:media>
+                                                        </ui:repeat>                                                  
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </center>
+                                </header>                                
+                                <p:messages id="messagesSubmit" showDetail="true" autoUpdate="true" closable="true" />
+                                <div class="pull-right">
+                                    <p:commandButton value="Submit" actionListener="#{addFestivalBean.store}" process="@this"/>
+                                </div>
+                            </p:tab>
+                        </p:wizard>                 
+                    </fieldset>
+                </h:form>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

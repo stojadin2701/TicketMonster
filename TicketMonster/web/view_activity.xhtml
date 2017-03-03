@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                <fieldset>
+                    <legend>Recently Active Users</legend>
+                    <p:dataTable id="recently_active_users" var="user" value="#{activityBean.recentlyActiveList}">
+
+                        <p:column headerText="Username">
+                            <h:outputText value="#{user.username}" />
+                        </p:column>
+
+                        <p:column headerText="First Name">
+                            <h:outputText value="#{user.firstName}" />
+                        </p:column>
+
+                        <p:column headerText="Last Name">
+                            <h:outputText value="#{user.lastName}" />
+                        </p:column>
+
+                        <p:column headerText="Phone">
+                            <h:outputText value="#{user.phone}" />
+                        </p:column>
+
+                        <p:column headerText="E-mail">
+                            <h:outputText value="#{user.EMail}" />
+                        </p:column>
+
+                        <p:column headerText="Last Login Time">
+                            <h:outputText value="#{user.lastLoginTime}" >
+                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            </h:outputText>
+                        </p:column>                                
+                    </p:dataTable>
+                </fieldset>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

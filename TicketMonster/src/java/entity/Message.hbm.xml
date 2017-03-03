@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2017 4:46:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.Message" table="message" catalog="ticketmonster" optimistic-lock="version">
+        <id name="messageId" type="java.lang.Integer">
+            <column name="message_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="event" class="entity.Event" fetch="select">
+            <column name="event_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="user" class="entity.User" fetch="select">
+            <column name="user_id" not-null="true" />
+        </many-to-one>
+        <property name="type" type="string">
+            <column name="type" length="9" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

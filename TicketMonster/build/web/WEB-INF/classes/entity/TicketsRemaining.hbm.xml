@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2017 4:46:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.TicketsRemaining" table="tickets_remaining" catalog="ticketmonster" optimistic-lock="version">
+        <composite-id name="id" class="entity.TicketsRemainingId">
+            <key-property name="eventId" type="int">
+                <column name="event_id" />
+            </key-property>
+            <key-property name="eventDay" type="int">
+                <column name="event_day" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="event" class="entity.Event" update="false" insert="false" fetch="select">
+            <column name="event_id" not-null="true" />
+        </many-to-one>
+        <property name="available" type="int">
+            <column name="available" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

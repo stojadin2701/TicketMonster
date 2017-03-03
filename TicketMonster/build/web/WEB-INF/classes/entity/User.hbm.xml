@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2017 4:46:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.User" table="user" catalog="ticketmonster" optimistic-lock="version">
+        <id name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+            <generator class="identity" />
+        </id>
+        <property name="firstName" type="string">
+            <column name="first_name" length="100" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="last_name" length="100" />
+        </property>
+        <property name="username" type="string">
+            <column name="username" length="100" unique="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="100" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="100" />
+        </property>
+        <property name="EMail" type="string">
+            <column name="`e-mail`" length="100" unique="true" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="8" />
+        </property>
+        <property name="lastLoginTime" type="timestamp">
+            <column name="last_login_time" length="19" />
+        </property>
+        <property name="fbId" type="string">
+            <column name="fb_id" length="2000" />
+        </property>
+        <property name="GId" type="string">
+            <column name="g_id" length="2000" />
+        </property>
+        <property name="admin" type="boolean">
+            <column name="admin" not-null="true" />
+        </property>
+        <property name="failedReservations" type="byte">
+            <column name="failed_reservations" not-null="true" />
+        </property>
+        <set name="reservations" table="reservation" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Reservation" />
+        </set>
+        <set name="messages" table="message" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Message" />
+        </set>
+        <set name="userReviews" table="user_review" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.UserReview" />
+        </set>
+    </class>
+</hibernate-mapping>

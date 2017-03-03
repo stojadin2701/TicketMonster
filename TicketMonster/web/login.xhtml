@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <div class="container">
+                <h:form class="well form-horizontal" id="login_form">
+                    <fieldset>
+                        <legend>Login</legend>
+                        <p:messages id="login_message" showDetail="true" autoUpdate="true" closable="true" />
+
+                        <p:remoteCommand name="rc" actionListener="#{loginBean.googleLogin}" process="@this"  immediate="true" />
+
+                        <div class="form-group">
+                            <center>   
+                                <div class="g-signin2" data-onsuccess="onSignIn"/>
+                                <br/>
+                                <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true"></div>
+                            </center>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" >Username</label> 
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <p:inputText class="form-control" id="username" value="#{loginBean.username}" required="true" label="username" placeholder="Username" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Password</label>  
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+                                    <p:password class="form-control" id="password" value="#{loginBean.password}" required="true" label="password" placeholder="Password"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label"></label>
+                            <div class="col-md-4">
+                                <h:commandButton class="btn btn-primary btn-block" value="Sign in" action="#{loginBean.login}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>        
+
+</html>

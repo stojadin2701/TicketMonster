@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                <h:form id="sell_form">                    
+                    <fieldset>
+                        <legend>Direct Selling</legend>
+                        <p:messages id="messageSellDirectly" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable id="sell_directly_table" var="event" value="#{directSellingBean.sellableEvents}">
+
+                            <p:column headerText="Venue">
+                                <h:outputText value="#{event.eventName}" />
+                            </p:column>
+
+                            <p:column headerText="Venue">
+                                <h:outputText value="#{event.eventPlace}" />
+                            </p:column>
+
+                            <p:column headerText="Start Date">
+                                <h:outputText value="#{event.startDate}" />
+                            </p:column>
+
+                            <p:column headerText="End Date">
+                                <h:outputText value="#{event.endDate}" />
+                            </p:column>
+
+                            <p:column headerText="One Day Ticket" style="width:8%">
+                                <h:outputText value="#{event.oneDayTicketPrice}" />
+                            </p:column>
+
+                            <p:column headerText="Full Ticket" style="width:8%">
+                                <h:outputText value="#{event.allDaysTicketPrice}" />
+                            </p:column>
+                            <p:column headerText="Sell One Day Ticket" style="width:20%">
+                                <p:selectOneMenu id="select_day" value="#{directSellingBean.daySelected}">
+                                    <f:selectItems value="#{directSellingBean.getAvailableDays(event)}" />
+                                </p:selectOneMenu>
+                                <p:commandButton class="btn btn-sm btn-primary pull-right" value="One Day (#{event.oneDayTicketPrice}€)" actionListener="#{directSellingBean.sellOne(event)}"/>
+                            </p:column>
+
+                            <p:column headerText="Sell Full Ticket" style="width:15%">
+                                <p:commandButton class="btn btn-sm btn-primary" value="All Days (#{event.allDaysTicketPrice}€)" actionListener="#{directSellingBean.sellAll(event)}"/>
+                            </p:column>
+
+                        </p:dataTable>
+
+
+                    </fieldset>                   
+                </h:form>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

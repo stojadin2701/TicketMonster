@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+
+                <h:form id="file_form" class="well form-horizontal" enctype="multipart/form-data">
+                    <fieldset>
+                        <legend>Add With File</legend>
+                        <p:wizard flowListener="#{addFestivalBean.onFlowProcess}">
+                            <p:tab id="add_file" title="Festival Details">
+                                Upload a JSON or CSV file to create an event:
+                                <h:outputText />
+                                <p:messages id="file_upload" showDetail="true" autoUpdate="true" closable="true" />
+                                <p:panel header="Upload file">
+                                    <h:panelGrid columns="1">
+                                        <p:fileUpload fileUploadListener="#{addFestivalBean.addEventFromFile}" mode="advanced" dragDropSupport="true"
+                                                      update="file_upload" fileLimit="1" sizeLimit="1000000" allowTypes="/(\.|\/)(json|csv)$/" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="media" title="Media">
+                                <p:panel header="Add Images">
+                                    <h:panelGrid columns="1">
+
+                                        <p:fileUpload fileUploadListener="#{addFestivalBean.addImage}" mode="advanced" dragDropSupport="true"
+                                                      update="@(.i_list)" sizeLimit="10000000" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/" />
+
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="Add Videos">
+                                    <h:panelGrid columns="1">
+
+                                        <p:fileUpload fileUploadListener="#{addFestivalBean.addVideo}" mode="advanced" dragDropSupport="true"
+                                                      update="@(.v_list)" sizeLimit="1000000000" allowTypes="/(\.|\/)(ogg|webm|mp4)$/" />
+
+                                    </h:panelGrid>
+                                </p:panel>
+
+                                <hr/>
+                                <fieldset>
+                                    <legend>Images</legend>
+                                    <h:form id="img_form">
+                                        <p:messages id="imagesUpload" for="imageApproval" showDetail="true" autoUpdate="true" closable="true" />
+                                        <p:dataTable class="i_list" value="#{addFestivalBean.ilist}" var="image">
+                                            <p:column headerText="Image" >
+                                                <center>
+                                                    <p:graphicImage style="width:400px; height:225px" title="Event images" value="#{imageFetcherBean.image}">
+                                                        <f:param name="filename" value="#{image.imageUrl}"/>
+                                                    </p:graphicImage>
+                                                </center>
+                                            </p:column>
+                                            <p:column headerText="Action">
+                                                <center>
+                                                    <p:commandButton class="btn btn-sm btn-primary"  value="Remove Image" action="#{addFestivalBean.removeImage(image)}" process="@this" update="@(.i_list)"/>
+                                                </center>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </fieldset>
+                                <hr/>
+                                <fieldset>
+                                    <legend>Videos</legend>
+                                    <h:form id="vid_form">
+                                        <p:messages id="imagesUpload" for="videoApproval" showDetail="true" autoUpdate="true" closable="true" />
+                                        <p:dataTable class="v_list" value="#{addFestivalBean.vlist}" var="video">
+                                            <p:column headerText="Video" >
+                                                <center>
+                                                    <p:media value="#{video.videoUrl}" player="real" height="400" width="300">
+                                                        <f:param name="autoplay" value="0"/>
+                                                    </p:media>
+                                                </center>
+                                            </p:column>
+                                            <p:column headerText="Action">
+                                                <center>
+                                                    <p:commandButton class="btn btn-sm btn-primary"  value="Remove Video" action="#{addFestivalBean.removeVideo(video)}" process="@this" update="@(.v_list)"/>
+                                                </center>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </fieldset>
+                            </p:tab>
+                            <p:tab id="review" title="Preview">
+
+                                <h:outputText />
+
+                                <header align="center" class="page-header">
+                                    <center>
+                                        <h1 class="page-title">#{addFestivalBean.ev.eventName}</h1>
+                                        <div class="row">
+                                            <div class="col-md-10 col-lg-offset-1">
+                                                <div class="panel panel-default">
+                                                    <div class="bs-callout bs-callout-danger">
+                                                        <h4>Where?</h4>
+                                                        <p>
+                                                            #{addFestivalBean.ev.eventPlace}
+                                                        </p>
+                                                        <hr/>
+                                                        <h4>When?</h4>
+                                                        <p>
+                                                            #{addFestivalBean.ev.startDate} - #{addFestivalBean.ev.endDate}
+                                                        </p>
+                                                        <hr/>
+                                                        <h4>How much?</h4>
+                                                        <p>
+                                                            One day: #{addFestivalBean.ev.oneDayTicketPrice}€
+                                                            All days: #{addFestivalBean.ev.allDaysTicketPrice}€
+                                                        </p>
+                                                        <hr/>                                
+                                                        <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                                            <h4>Admin Details</h4>
+                                                            <p>
+                                                                Maximum reservations per user: #{addFestivalBean.ev.maxReservationsPerUser}
+                                                                Available tickets per day: #{addFestivalBean.ev.maxTicketsAvailablePerDay}
+                                                            </p>
+                                                            <hr/>
+                                                        </ui:fragment>
+                                                        <h4>Lineup</h4>
+                                                        <ui:repeat value="#{addFestivalBean.plist}" var="performer">
+                                                            <p>
+                                                                #{performer.performerName}:
+                                                                <h:outputText value="#{performer.startTime}" >
+                                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                                </h:outputText>
+                                                                -
+                                                                <h:outputText value="#{performer.endTime}" >
+                                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                                </h:outputText>
+                                                            </p>
+                                                        </ui:repeat>
+                                                        <hr/>
+                                                        <h4>Social Networks</h4>                                                    
+                                                        <ui:repeat value="#{addFestivalBean.llist}" var="slink">
+                                                            <p>
+                                                                <h:outputLink value="#{slink.url}">#{slink.networkName}</h:outputLink>                                                                                        
+                                                            </p>
+                                                        </ui:repeat>
+                                                        <hr/>
+                                                        <h4>Images</h4>
+                                                        <p:contentFlow value="#{addFestivalBean.ilist}" var="image" style="height:600px;">
+                                                            <p:graphicImage value="#{imageFetcherBean.image}"  styleClass="content">
+                                                                <f:param name="filename" value="#{image.imageUrl}"/>
+                                                            </p:graphicImage>
+                                                        </p:contentFlow>                                   
+                                                        <hr/>                                    
+                                                        <h4>Videos</h4>
+                                                        <ui:repeat value="#{addFestivalBean.vlist}"  var="video">
+                                                            <p:media value="#{video.videoUrl}" player="real" height="400" width="300">
+                                                                <f:param name="autoplay" value="0"/>
+                                                            </p:media>
+                                                        </ui:repeat>                                                    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </center>
+                                </header>     
+
+                                <p:messages id="messagesSubmit" showDetail="true" autoUpdate="true" closable="true" />
+                                <div class="pull-right">
+                                    <p:commandButton value="Submit" actionListener="#{addFestivalBean.store}" process="@this"/>
+                                </div>
+                            </p:tab>
+                        </p:wizard>
+                    </fieldset>
+                </h:form>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

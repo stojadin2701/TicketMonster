@@ -1,0 +1,109 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <h:outputLink class="navbar-brand" value="index.xhtml">
+                        <h:outputText value="TicketMonster" />
+                    </h:outputLink>
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Add Festival <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><h:link value="Manually" outcome="add_manually" /></li>
+                                        <li><h:link value="With File" outcome="add_file" /></li>
+                                    </ul>
+                                </li>
+                            </ui:fragment>
+                        </li>
+                        <li>
+                            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage Tickets <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><h:link value="Manage Reservations" outcome="manage_reservations" /></li>
+                                        <li><h:link value="Sell Directly" outcome="sell_directly" /></li>
+                                    </ul>
+                                </li>
+                            </ui:fragment>
+                        </li>
+                        <li>
+                            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage Users <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><h:link value="Manage User Registrations" outcome="manage_users" /></li>
+                                        <li><h:link value="Manage User Uploads" outcome="manage_uploads" /></li>
+                                    </ul>
+                                </li>
+                            </ui:fragment>
+                        </li>       
+                        <li>
+                            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                <h:link value="View User Activity" outcome="view_activity" />
+                            </ui:fragment>
+                        </li>
+                        <li>
+                            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isUser()}">
+                                <h:link value="My Reservations" outcome="user_reservations" />
+                            </ui:fragment>
+                        </li>
+                    </ul>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <ui:fragment rendered="#{!loginBean.loggedIn}">
+                                <h:link value="Login" outcome="login" />
+                            </ui:fragment>
+                        </li>
+                        <li>
+                            <ui:fragment rendered="#{!loginBean.loggedIn}">
+                                <h:link value="Register" outcome="register" />
+                            </ui:fragment>
+                        </li>
+                        <ui:fragment rendered="#{loginBean.loggedIn}">
+                            <li>
+                                <a disabled="true" class="welcome">Welcome #{loginBean.username}!</a>
+                            </li>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{loginBean.loggedIn and !loginBean.gLogin}">
+                            <li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span>Settings <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><h:link value="Change Password" outcome="pass_change" /></li>
+                                    </ul>
+                                </li>
+                            </li>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{loginBean.loggedIn}">
+                            <li>
+                                <h:form class="form" role="form" id="logout-form">
+                                    <h:commandLink  class="navbar-brand" value="Logout" action="#{loginBean.logout}" />
+                                </h:form>
+                            </li>
+                        </ui:fragment>
+                    </ul>
+                    <!--     <form class="navbar-form navbar-right">
+                             <input type="text" class="form-control" placeholder="Search..." />
+                         </form>
+                    -->
+                </div>
+            </div>
+        </div>
+    </ui:composition>
+</html>

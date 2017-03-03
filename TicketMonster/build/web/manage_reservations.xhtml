@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                <h:form>                    
+                    <fieldset>
+                        <legend>Pending Reservations</legend>
+                        <p:messages id="messagesReservations" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable id="pending_reservations" var="reservation" value="#{reservationsBean.pendingReservations}" class="r_list">
+
+                            <p:column headerText="User">
+                                <h:outputText value="#{reservation.user.username}" />
+                            </p:column>
+
+                            <p:column headerText="Event">
+                                <h:outputText value="#{reservation.event.eventName}" />
+                            </p:column>
+
+                            <p:column headerText="Ticket Type">
+                                <h:outputText value="#{reservation.type eq 'one_day'? 'One Day' : 'All Days' }" />
+                            </p:column>
+
+                            <p:column headerText="Reservation Created">
+                                <h:outputText value="#{reservation.reservationDatetime}" >
+                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Action">
+                                <center>
+                                    <p:commandButton class="btn btn-sm btn-success" icon="ui-icon-check" title="Sell Reservation" action="#{reservationsBean.sellReservation(reservation)}" update="@(.r_list)" />
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                    </fieldset>                   
+                </h:form>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

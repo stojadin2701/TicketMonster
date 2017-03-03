@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn}">
+                <div class="container">
+                    <h:form class="well form-horizontal" id="reset_form">
+                        <fieldset>
+                            <legend>Change Password</legend>
+                            <p:messages id="password_reset" showDetail="true" autoUpdate="true" closable="true" />
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Current Password</label>  
+                                <div class="col-md-4 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+                                        <p:password class="form-control" id="old_password" value="#{passResetBean.oldPassword}" required="true" label="old_password"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">New Password</label>  
+                                <div class="col-md-4 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+                                        <p:password class="form-control" id="new_password" value="#{passResetBean.newPassword}" required="true" label="new_password"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Confirm New Password</label>  
+                                <div class="col-md-4 inputGroupContainer">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-lock fa-lg"></i></span>
+                                        <p:password class="form-control" id="new_password_confirm" value="#{passResetBean.newPasswordConfirm}" required="true" label="new_password_confirm"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label"></label>
+                                <div class="col-md-4">
+                                    <h:commandButton class="btn btn-primary btn-block" value="Change Password" action="#{passResetBean.resetPassword(loginBean.username)}"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </h:form>
+                </div>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

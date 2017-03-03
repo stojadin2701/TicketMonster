@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">            
+            <div class="container">
+
+                <h:form class="well form-horizontal" id="register_form">
+                    <fieldset>
+
+
+                        <legend>Register</legend>
+                        <p:messages id="register_message" showDetail="true" autoUpdate="true" closable="true" />
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Username*</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <p:inputText id="username" class="form-control" required="true" value="#{registerBean.username}"/>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">E-Mail*</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                    <p:inputText id="e_mail" class="form-control" required="true" value="#{registerBean.eMail}"/>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Password*</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <h:inputSecret id="password" class="form-control" value="#{registerBean.password}" required="true" requiredMessage="Please enter your password">       
+                                    </h:inputSecret>                                    
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Confirm password*</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <h:inputSecret id="password_confirm" class="form-control" value="#{registerBean.passwordConfirmation}" required="true" requiredMessage="Please confirm your password">
+                                    </h:inputSecret>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">First Name</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <p:inputText id="first_name" class="form-control" required="true" value="#{registerBean.firstName}"/>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Last Name</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <p:inputText id="last_name" class="form-control" required="true" value="#{registerBean.lastName}"/>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Phone #</label>
+                            <div class="col-md-4 inputGroupContainer">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                                    <p:inputMask id="phone" class="form-control" required="true" value="#{registerBean.phone}" mask="(999) 999-9999"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success" role="alert" id="success_message">Success <i class="glyphicon glyphicon-thumbs-up"></i> You have successfully created your account!</div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label"></label>
+                            <div class="col-md-4">
+                                    <h:commandButton action="#{registerBean.register}" class="btn btn-lg btn-primary btn-block" value="Register"/>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>        
+
+</html>

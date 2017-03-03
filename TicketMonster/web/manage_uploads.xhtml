@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                <fieldset>
+                    <legend>Images</legend>
+                    <h:form id="img_form">
+                        <p:messages id="imagesUpload" for="imageApproval" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable class="i_list" value="#{mediaApprovalBean.imgApprovalList}" var="image">
+                            <p:column headerText="Event">
+                                <h:outputText value="#{image.event.eventName}" />
+                            </p:column>
+                            <p:column headerText="Image" >
+                                <center>
+                                    <p:graphicImage style="width:400px; height:225px" title="Event images" value="#{imageFetcherBean.image}">
+                                        <f:param name="filename" value="#{image.imageUrl}"/>
+                                    </p:graphicImage>
+                                </center>
+                            </p:column>
+                            <p:column headerText="Action">
+                                <center>
+                                    <p:commandButton class="btn btn-sm btn-success table_button_l" title="Aprove Image" icon="ui-icon-check" action="#{mediaApprovalBean.approveImage(image, true)}" update="@(.i_list)" ajax="true"/>
+                                    <p:commandButton class="btn btn-sm btn-danger table_button_r" title="Reject Image" icon="ui-icon-close" action="#{mediaApprovalBean.approveImage(image, false)}" update="@(.i_list)" ajax="true"/>
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </fieldset>
+                <hr/>
+                <fieldset>
+                    <legend>Videos</legend>
+                    <h:form id="vid_form">
+                        <p:messages id="imagesUpload" for="videoApproval" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable class="v_list" value="#{mediaApprovalBean.vidApprovalList}" var="video">
+                            <p:column headerText="Event">
+                                <h:outputText value="#{video.event.eventName}" />
+                            </p:column>
+                            <p:column headerText="Video" >
+                                <center>
+                                    <p:media value="#{videoFetcherBean.video}" width="250" height="225" player="real">
+                                        <f:param name="filename" value="#{video.videoUrl}"/>
+                                    </p:media>
+                                </center>
+                            </p:column>
+                            <p:column headerText="Action">
+                                <center>
+                                    <p:commandButton class="btn btn-sm btn-success table_button_l" title="Aprove Video" icon="ui-icon-check" action="#{mediaApprovalBean.approveVideo(video, true)}" update="@(.v_list)" ajax="true"/>
+                                    <p:commandButton class="btn btn-sm btn-danger table_button_r" title="Reject Video" icon="ui-icon-close" action="#{mediaApprovalBean.approveVideo(video, false)}" update="@(.v_list)" ajax="true"/>
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </fieldset>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>
+</html>

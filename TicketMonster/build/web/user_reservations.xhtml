@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isUser()}">
+                <h:form>                    
+                    <fieldset>
+                        <legend>My Reservations</legend>
+                        <p:messages id="messagesReservations" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable id="user_reservations" var="reservation" value="#{reservationsBean.getReservationsForUser(loginBean.currentUser)}" class="r_list" rowStyleClass="#{reservation.status}">
+
+                            <p:column headerText="Event" rendered="#{loginBean.loggedIn}">
+                                <h:commandLink action="#{reservationsBean.showDetails(reservation.event)}">
+                                    <h:outputText value="#{reservation.event.eventName}" />
+                                </h:commandLink>
+                            </p:column>
+
+                            <p:column headerText="Ticket Type">
+                                <h:outputText value="#{reservation.type eq 'one_day'? 'One Day' : 'All Days' }" />
+                            </p:column>
+
+                            <p:column headerText="Reservation day">
+                                <h:outputText value="#{reservation.type eq 'one_day'? reservation.daySelected : '/' }" />
+                            </p:column>
+
+                            <p:column headerText="Reservation Created">
+                                <h:outputText value="#{reservation.reservationDatetime}" >
+                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Status">
+                                <h:outputText value="#{reservation.status eq 'cancelled_by_user'?'cancelled by user':reservation.status }" />
+                            </p:column>
+
+                            <p:column headerText="Action">
+                                <center>
+                                    <p:commandButton rendered="#{reservation.status eq 'pending'}" class="btn btn-sm btn-danger" title="Cancel Reservation" icon="ui-icon-close" action="#{reservationsBean.cancelReservation(reservation)}" update="@(.r_list)" />
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                    </fieldset>                   
+                </h:form>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

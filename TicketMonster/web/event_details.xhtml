@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and !eventDetailsBean.event.cancelled}">
+                <header align="center" class="page-header">
+                    <center>
+                        <h1 class="page-title">#{eventDetailsBean.event.eventName}</h1>
+                        <div class="row">
+                            <div class="col-md-10 col-lg-offset-1">
+                                <div class="panel panel-default">
+                                    <div class="bs-callout bs-callout-danger">
+                                        <h4>Where?</h4>
+                                        <p>
+                                            #{eventDetailsBean.event.eventPlace}
+                                        </p>
+                                        <hr/>
+                                        <h4>When?</h4>
+                                        <p>
+                                            #{eventDetailsBean.event.startDate} - #{eventDetailsBean.event.endDate}
+                                        </p>
+                                        <hr/>
+                                        <h4>How much?</h4>
+                                        <p>
+                                            One day: #{eventDetailsBean.event.oneDayTicketPrice}€
+                                            All days: #{eventDetailsBean.event.allDaysTicketPrice}€
+                                        </p>
+                                        <hr/>                                
+                                        <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                                            <h4>Admin Details</h4>
+                                            <p>
+                                                Maximum reservations per user: #{eventDetailsBean.event.maxReservationsPerUser}
+                                                Available tickets per day: #{eventDetailsBean.event.maxTicketsAvailablePerDay}
+                                            </p>
+                                            <hr/>
+                                        </ui:fragment>
+                                        <h4>Lineup</h4>
+                                        <ui:repeat value="#{eventDetailsBean.event.performers.toArray()}" var="performer">
+                                            <p>
+                                                #{performer.performerName}:
+                                                <h:outputText value="#{performer.startTime}" >
+                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                </h:outputText>
+                                                -
+                                                <h:outputText value="#{performer.endTime}" >
+                                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                </h:outputText>
+                                            </p>
+                                        </ui:repeat>
+                                        <hr/>
+                                        <h4>Social Networks</h4>
+                                        <ui:repeat value="#{eventDetailsBean.event.socialLinks.toArray()}" var="slink">
+                                            <p>
+                                                <h:outputLink value="#{slink.url}">#{slink.networkName}</h:outputLink>                                                                                        
+                                            </p>
+                                        </ui:repeat>
+                                        <hr/>
+                                        <h4>Images</h4>
+                                        <p:contentFlow value="#{eventDetailsBean.ilist}" var="image" style="height:600px;">
+                                            <p:graphicImage value="#{imageFetcherBean.image}"  styleClass="content">
+                                                <f:param name="filename" value="#{image.imageUrl}"/>
+                                            </p:graphicImage>
+                                        </p:contentFlow>                                   
+                                        <hr/>                                    
+                                        <h4>Videos</h4>
+                                        <ui:repeat value="#{eventDetailsBean.vlist}"  var="video">
+                                            <p:media value="#{video.videoUrl}" player="real" height="400" width="300">
+                                                <f:param name="autoplay" value="0"/>
+                                            </p:media>
+                                        </ui:repeat>                                      
+                                        <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isUser() and eventDetailsBean.reservable and eventDetailsBean.hasTickets}">
+                                            <hr/>
+                                            <h4>Reserve a Ticket</h4>
+                                            <p:messages for="messageReservation" id="messageReservation" showDetail="true" autoUpdate="true" closable="true" />
+                                            <ui:fragment rendered="#{eventDetailsBean.canReserveMore(loginBean.currentUser)}">
+                                                <p>
+                                                    <h:form>
+                                                        <p:commandButton class="btn btn-primary" value="One Day (#{eventDetailsBean.event.oneDayTicketPrice}€)" onclick="PF('reserve_dlg').show();" />
+                                                        <p:commandButton class="btn btn-primary" value="All Days (#{eventDetailsBean.event.allDaysTicketPrice}€)" actionListener="#{eventDetailsBean.reserveAll(loginBean.currentUser)}" update="messageReservation">
+                                                            <p:confirm header="Confirmation" message="Confirm your reservation" icon="ui-icon-star" />
+                                                        </p:commandButton>
+                                                    </h:form>
+                                                </p>        
+                                                <p:dialog header="Ticket Reservation" widgetVar="reserve_dlg" width="300" height="200" modal="true">
+                                                    <h:form>
+                                                        <p:outputLabel for="select_day" value="Select a day: " />
+                                                        <p:selectOneMenu id="select_day" value="#{eventDetailsBean.daySelected}" style="width:100px">
+                                                            <f:selectItems value="#{eventDetailsBean.availableDays}" />
+                                                        </p:selectOneMenu>
+                                                        <hr/>
+                                                        <p:commandButton class="btn btn-sm btn-primary" value="Reserve a Ticket" action="#{eventDetailsBean.reserveOne(loginBean.currentUser)}" update="messageReservation" oncomplete="PF('reserve_dlg').hide();"/>
+                                                    </h:form>
+                                                </p:dialog>
+                                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                                    <center>
+                                                        <h:form>
+                                                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                                        </h:form>
+                                                    </center>
+                                                </p:confirmDialog>
+                                            </ui:fragment>
+                                            <ui:fragment rendered="#{!eventDetailsBean.canReserveMore(loginBean.currentUser)}">
+                                                You cannot make more reservations for this event.
+                                            </ui:fragment>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isUser() and !eventDetailsBean.hasTickets}">
+                                            <hr/>
+                                            <h4>Reserve a Ticket</h4>
+                                            There are no tickets left for this event.
+                                        </ui:fragment>
+                                        <ui:fragment id="reviews">
+                                            <hr/>
+                                            <h4>Comments and Reviews</h4>
+                                            <h:form >
+                                                <ui:repeat value="#{eventDetailsBean.userReviews}" var="review">
+                                                    <div class="row">                                                
+                                                        <div class="col-sm-12">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading">
+                                                                    <div class="pull-left">
+                                                                        <strong>#{review.user.username}</strong>
+                                                                        <span class="text-muted">
+                                                                            reviewed <i>#{eventDetailsBean.event.eventName}</i> at 
+                                                                            <h:outputText value="#{review.reviewTime}" >
+                                                                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                                                                            </h:outputText>
+                                                                        </span>
+                                                                    </div>
+                                                                    <ui:fragment rendered="#{review.rating!=null}">
+                                                                        <div class="pull-right">
+                                                                            <p:rating stars="10" value="#{review.rating}" readonly="true" />
+                                                                        </div>
+                                                                    </ui:fragment>
+                                                                    <br/>
+                                                                </div>
+
+                                                                <div class="panel-body">
+                                                                    #{review.comment}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ui:repeat>
+                                            </h:form>                                        
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{eventDetailsBean.canComment(loginBean.currentUser)}">
+                                            <hr/>
+                                            <h4>Write your own comment</h4>
+                                            <h:form id="reviewForm">
+                                                <p:messages for="messageReview" id="messageReview" showDetail="true" autoUpdate="true" closable="true" />
+                                                <div class="form-group center-block">
+                                                    <p:inputTextarea rows="6" cols="33" value="#{eventDetailsBean.currentComment}"/>
+
+                                                    <p:rating stars="10" value="#{eventDetailsBean.currentRating}" style="width:200px;margin: 0 auto;" />
+
+                                                </div>
+                                                <br/>
+                                                <p:commandButton class="btn btn-primary" value="Comment" action="#{eventDetailsBean.review(loginBean.currentUser)}" update="reviewForm">
+                                                    <p:ajax update="@(.reviews)"/>
+                                                </p:commandButton>
+                                                <br/>
+                                                <br/>
+                                            </h:form>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{loginBean.isUser()}">
+                                            <hr/>
+                                            <h4>Add Media</h4>
+                                            <h:form>
+                                                <p:messages for="imageVideoMessage" id="imageVideoMessage" showDetail="true" autoUpdate="true" closable="true" />
+                                                <p:panel header="Add Images">
+                                                    <h:panelGrid columns="1">
+                                                        <p:fileUpload fileUploadListener="#{eventDetailsBean.addAndStoreImage}" mode="advanced" dragDropSupport="true"
+                                                                      update="imageVideoMessage" sizeLimit="10000000" allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/" />
+                                                    </h:panelGrid>
+                                                </p:panel>
+                                                <p:panel header="Add Videos">
+                                                    <h:panelGrid columns="1">
+                                                        <p:fileUpload fileUploadListener="#{eventDetailsBean.addAndStoreVideo}" mode="advanced" dragDropSupport="true"
+                                                                      update="imageVideoMessage" sizeLimit="1000000000" allowTypes="/(\.|\/)(ogg|webm|mp4)$/" />
+                                                    </h:panelGrid>
+                                                </p:panel>
+                                            </h:form>
+                                        </ui:fragment>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </center>
+                </header>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

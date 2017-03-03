@@ -1,0 +1,8 @@
+/* Author: Nemanja Stojoski */
+body {
+  padding-bottom: 40px;
+}
+
+#success_message {
+	display: none;
+}

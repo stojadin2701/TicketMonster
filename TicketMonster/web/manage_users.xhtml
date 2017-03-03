@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">  
+
+    <ui:composition template="/templates/default/main.xhtml">
+        <ui:define name="content">
+            <ui:fragment rendered="#{loginBean.loggedIn and loginBean.isAdmin}">
+                <h:form>                    
+                    <fieldset>
+                        <legend>Recently Active Users</legend>
+                        <p:messages id="messagesPerformer" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:dataTable id="recently_active_users" var="user" value="#{userApprovalBean.userApprovalList}" class="u_list">
+
+                            <p:column headerText="Username">
+                                <h:outputText value="#{user.username}" />
+                            </p:column>
+
+                            <p:column headerText="First Name">
+                                <h:outputText value="#{user.firstName}" />
+                            </p:column>
+
+                            <p:column headerText="Last Name">
+                                <h:outputText value="#{user.lastName}" />
+                            </p:column>
+
+                            <p:column headerText="Phone">
+                                <h:outputText value="#{user.phone}" />
+                            </p:column>
+
+                            <p:column headerText="E-mail">
+                                <h:outputText value="#{user.EMail}" />
+                            </p:column>
+
+                            <p:column headerText="Action">
+                                <center>
+                                    <p:commandButton class="btn btn-sm btn-success table_button_l" title="Aprove User" icon="ui-icon-check" action="#{userApprovalBean.approveUser(user, true)}" update="@(.u_list)" />
+                                    <p:commandButton class="btn btn-sm btn-danger table_button_r" title="Reject User" icon="ui-icon-close" action="#{userApprovalBean.approveUser(user, false)}" update="@(.u_list)" />
+                                </center>
+                            </p:column>
+                        </p:dataTable>
+                    </fieldset>                   
+                </h:form>
+            </ui:fragment>
+        </ui:define>
+    </ui:composition>        
+
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2017 4:46:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.SocialLink" table="social_link" catalog="ticketmonster" optimistic-lock="version">
+        <id name="socialLinkId" type="java.lang.Integer">
+            <column name="social_link_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="event" class="entity.Event" fetch="select">
+            <column name="event_id" not-null="true" />
+        </many-to-one>
+        <property name="networkName" type="string">
+            <column name="network_name" length="30" not-null="true" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" length="300" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

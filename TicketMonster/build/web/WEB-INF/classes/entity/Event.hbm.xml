@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2017 4:46:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.Event" table="event" catalog="ticketmonster" optimistic-lock="version">
+        <id name="eventId" type="java.lang.Integer">
+            <column name="event_id" />
+            <generator class="identity" />
+        </id>
+        <property name="eventName" type="string">
+            <column name="event_name" length="100" not-null="true" />
+        </property>
+        <property name="eventPlace" type="string">
+            <column name="event_place" length="100" not-null="true" />
+        </property>
+        <property name="startDate" type="date">
+            <column name="start_date" length="10" not-null="true" />
+        </property>
+        <property name="endDate" type="date">
+            <column name="end_date" length="10" not-null="true" />
+        </property>
+        <property name="oneDayTicketPrice" type="long">
+            <column name="one_day_ticket_price" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="allDaysTicketPrice" type="long">
+            <column name="all_days_ticket_price" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="maxReservationsPerUser" type="short">
+            <column name="max_reservations_per_user" not-null="true" />
+        </property>
+        <property name="maxTicketsAvailablePerDay" type="int">
+            <column name="max_tickets_available_per_day" not-null="true" />
+        </property>
+        <property name="viewCount" type="int">
+            <column name="view_count" not-null="true" />
+        </property>
+        <property name="sellCount" type="int">
+            <column name="sell_count" not-null="true" />
+        </property>
+        <property name="cancelled" type="boolean">
+            <column name="cancelled" not-null="true" />
+        </property>
+        <property name="rating" type="float">
+            <column name="rating" precision="12" scale="0" not-null="true" />
+        </property>
+        <set name="ticketsRemainings" table="tickets_remaining" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.TicketsRemaining" />
+        </set>
+        <set name="videos" table="video" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Video" />
+        </set>
+        <set name="reservations" table="reservation" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Reservation" />
+        </set>
+        <set name="images" table="image" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Image" />
+        </set>
+        <set name="performers" table="performer" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Performer" />
+        </set>
+        <set name="messages" table="message" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.Message" />
+        </set>
+        <set name="socialLinks" table="social_link" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="event_id" not-null="true" />
+            </key>
+            <one-to-many class="entity.SocialLink" />
+        </set>
+    </class>
+</hibernate-mapping>

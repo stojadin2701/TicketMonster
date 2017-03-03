@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 17, 2017 4:46:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UserReview" table="user_review" catalog="ticketmonster" optimistic-lock="version">
+        <id name="reviewId" type="java.lang.Integer">
+            <column name="review_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="user" class="entity.User" fetch="select">
+            <column name="user_id" not-null="true" />
+        </many-to-one>
+        <property name="eventName" type="string">
+            <column name="event_name" length="100" not-null="true" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="65535" />
+        </property>
+        <property name="rating" type="java.lang.Byte">
+            <column name="rating" />
+        </property>
+        <property name="reviewTime" type="timestamp">
+            <column name="review_time" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>
